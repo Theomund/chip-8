@@ -1,7 +1,10 @@
+#include "emulator.h"
 #include <iostream>
+
 
 int main()
 {
-    std::cout << "Hello, world!" << std::endl;
+    Emulator emulator;
+    emulator.runCycle();
     return 0;
 }
