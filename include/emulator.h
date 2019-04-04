@@ -4,13 +4,19 @@
 #include <array>
 #include <stack>
 #include <iostream>
+#include <fstream>
+#include <iterator>
+#include <vector>
 
 class Emulator
 {
 public:
-    Emulator();
+    Emulator(const std::string &fileName);
     void runCycle();
+    unsigned char waitForInput();
 private:
+    std::ifstream stream;
+    std::vector<unsigned char> data;
     std::array<unsigned char, 4096> memory;
     std::array<unsigned char, 16> V;
     std::array<unsigned char, 64 * 32> pixels;
