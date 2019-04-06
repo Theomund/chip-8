@@ -1,19 +1,14 @@
 #include "emulator.h"
 #include <iostream>
 
-int main(int argc, char *argv[])
-{
-    if (argc == 2)
-    {
+int main(int argc, char *argv[]) {
+    if (argc == 2) {
         Emulator emulator(argv[1]);
-        while (true)
-        {
+        while (true) {
             emulator.runCycle();
         }
-    }
-    else
-    {
-        std::cerr << "Usage: ./emulator [FILE]" << std::endl;
+    } else {
+        std::cerr << "Usage: ./emulator [ROM]" << std::endl;
     }
     return 0;
 }
