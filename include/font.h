@@ -7,10 +7,12 @@
 class Font {
   public:
     Font();
-    std::array<std::array<std::uint16_t, 5>, 16> getCharacters() const;
+    std::array<std::uint8_t, 5> getCharacter(std::uint32_t index) const;
+    std::size_t getSize() const;
+    std::size_t getHeight() const;
 
   private:
-    std::array<std::array<std::uint16_t, 5>, 16> characters;
+    std::array<std::array<std::uint8_t, 5>, 16> characters;
 };
 
 #endif

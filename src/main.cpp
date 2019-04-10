@@ -4,7 +4,7 @@
 int main(int argc, char *argv[]) {
     if (argc == 2) {
         Emulator emulator(argv[1]);
-        while (true) {
+        while (!emulator.getQuitPressed()) {
             emulator.runCycle();
         }
     } else {

@@ -13,12 +13,14 @@ class Emulator {
   public:
     Emulator(const std::string &fileName);
     void runCycle();
+    bool getQuitPressed();
 
   private:
     CPU cpu;
     Memory memory;
     Keyboard keyboard;
     Display display;
+    bool quitPressed;
 };
 
 #endif

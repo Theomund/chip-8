@@ -118,6 +118,19 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
         PC += 2;
         break;
     case 0xD000:
+        V.at(0xF) = 0;
+        for (std::uint32_t yline = 0; yline < N; yline++) {
+            std::uint16_t pixel = memory.getAddress(I + yline);
+            for (std::uint32_t xline = 0; xline < 8; xline++) {
+                if ((pixel & (0x80 >> xline)) != 0) {
+                    if (display.getPixel(X + xline, Y + yline) == 1) {
+                        V.at(0xF) = 1;
+                    }
+                    display.setPixel(X + xline, Y + yline, display.getPixel(X + xline, Y + yline) ^ 1);
+                }
+            }
+        }
+        display.setDrawFlag(true);
         PC += 2;
         break;
     case 0xE000:
@@ -139,6 +152,7 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
             PC += 2;
             break;
         case 0x000A:
+            V.at(X) = keyboard.waitForInput();
             PC += 2;
             break;
         case 0x0015:
@@ -164,13 +178,13 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
             PC += 2;
             break;
         case 0x0055:
-            for (std::uint16_t i = 0; i <= X; i++) {
+            for (std::uint32_t i = 0; i <= X; i++) {
                 memory.setAddress(I + i, V.at(i));
             }
             PC += 2;
             break;
         case 0x0065:
-            for (std::uint16_t i = 0; i <= X; i++) {
+            for (std::uint32_t i = 0; i <= X; i++) {
                 V.at(i) = memory.getAddress(I + i);
             }
             PC += 2;
@@ -181,5 +195,13 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
         break;
     default:
         break;
+    }
+
+    if (soundTimer > 0) {
+        --soundTimer;
+    }
+
+    if (delayTimer > 0) {
+        --delayTimer;
     }
 }
