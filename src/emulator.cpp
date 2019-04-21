@@ -13,6 +13,4 @@ void Emulator::runCycle() {
     cpu.execute(display, keyboard, memory);
 }
 
-bool Emulator::getQuitPressed() {
-    return quitPressed;
-}
+bool Emulator::getQuitPressed() { return quitPressed; }

@@ -18,13 +18,11 @@ Font::Font()
                   {0xF0, 0x80, 0xF0, 0x80, 0xF0},
                   {0xF0, 0x80, 0xF0, 0x80, 0x80}}} {}
 
-std::array<std::uint8_t, 5> Font::getCharacter(std::uint32_t index) const {
+std::array<std::uint8_t, 5> Font::getCharacter(std::size_t index) const {
     return characters.at(index);
 }
 
-std::size_t Font::getSize() const {
-    return characters.size();
-}
+std::size_t Font::getSize() const { return characters.size(); }
 
 std::size_t Font::getHeight() const {
     return characters.at(0).size() * sizeof(std::uint8_t);

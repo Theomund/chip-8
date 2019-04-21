@@ -6,7 +6,10 @@
 #include "memory.h"
 
 #include <array>
+#include <chrono>
 #include <cstdint>
+#include <iostream>
+#include <thread>
 
 class CPU {
   public:

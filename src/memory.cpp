@@ -30,7 +30,7 @@ std::uint16_t Memory::pop() {
 }
 
 void Memory::loadFont(const Font &font) {
-    for (std::uint32_t i = 0; i < font.getSize(); i++) {
+    for (std::size_t i = 0; i < font.getSize(); i++) {
         auto character = font.getCharacter(i);
         std::copy(character.begin(), character.end(),
                   addresses.begin() + (i * font.getHeight()));

@@ -29,6 +29,7 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
             PC = memory.pop();
             break;
         default:
+            std::cerr << "Unknown opcode: " << std::hex << opcode << std::endl;
             break;
         }
         break;
@@ -36,17 +37,17 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
         PC = NNN;
         break;
     case 0x2000:
-        memory.push(PC);
+        memory.push(PC + 2);
         PC = NNN;
         break;
     case 0x3000:
-        PC += (V.at(X) == NN) ? 4 : 0;
+        PC += (V.at(X) == NN) ? 4 : 2;
         break;
     case 0x4000:
-        PC += (V.at(X) != NN) ? 4 : 0;
+        PC += (V.at(X) != NN) ? 4 : 2;
         break;
     case 0x5000:
-        PC += (V.at(X) != V.at(Y)) ? 4 : 0;
+        PC += (V.at(X) != V.at(Y)) ? 4 : 2;
         break;
     case 0x6000:
         V.at(X) = NN;
@@ -76,11 +77,11 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
             break;
         case 0x0004:
             V.at(0xF) = (V.at(Y) > (0xFF - V.at(X))) ? 1 : 0;
-            V.at(X) -= V.at(Y);
+            V.at(X) += V.at(Y);
             PC += 2;
             break;
         case 0x0005:
-            V.at(0xF) = (V.at(Y) < V.at(X)) ? 0 : 1;
+            V.at(0xF) = (V.at(Y) > V.at(X)) ? 0 : 1;
             V.at(X) -= V.at(Y);
             PC += 2;
             break;
@@ -100,11 +101,12 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
             PC += 2;
             break;
         default:
+            std::cerr << "Unknown opcode: " << std::hex << opcode << std::endl;
             break;
         }
         break;
     case 0x9000:
-        PC += (V.at(X) != V.at(Y)) ? 4 : 0;
+        PC += (V.at(X) != V.at(Y)) ? 4 : 2;
         break;
     case 0xA000:
         I = NNN;
@@ -114,20 +116,23 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
         PC = V.at(0) + NNN;
         break;
     case 0xC000:
-        V.at(X) = std::rand() & NN;
+        V.at(X) = (std::rand() % 256) & NN;
         PC += 2;
         break;
     case 0xD000:
         V.at(0xF) = 0;
-        for (std::uint32_t yline = 0; yline < N; yline++) {
-            std::uint16_t pixel = memory.getAddress(I + yline);
-            for (std::uint32_t xline = 0; xline < 8; xline++) {
-                if ((pixel & (0x80 >> xline)) != 0) {
-                    if (display.getPixel(X + xline, Y + yline) == 1) {
-                        V.at(0xF) = 1;
-                    }
-                    display.setPixel(X + xline, Y + yline, display.getPixel(X + xline, Y + yline) ^ 1);
+        for (std::uint32_t byteIndex = 0; byteIndex < N; byteIndex++) {
+            std::uint8_t byte = memory.getAddress(I + byteIndex);
+            for (std::uint32_t bitIndex = 0; bitIndex < 8; bitIndex++) {
+                std::uint8_t bit = (byte >> bitIndex) & 0x1;
+                std::uint8_t pixel =
+                    display.getPixel((V.at(X) + (7 - bitIndex)) % 64,
+                                     (V.at(Y) + byteIndex) % 32);
+                if (bit == 1 && pixel == 1) {
+                    V.at(0xF) = 1;
                 }
+                display.setPixel((V.at(X) + (7 - bitIndex)) % 64,
+                                 (V.at(Y) + byteIndex) % 32, pixel ^= bit);
             }
         }
         display.setDrawFlag(true);
@@ -142,6 +147,7 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
             PC += (keyboard.getKey(V.at(X)) == 0) ? 4 : 2;
             break;
         default:
+            std::cerr << "Unknown opcode: " << std::hex << opcode << std::endl;
             break;
         }
         break;
@@ -168,13 +174,13 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
             PC += 2;
             break;
         case 0x0029:
-            I = memory.getAddress(V.at(X));
+            I = 5 * V.at(X);
             PC += 2;
             break;
         case 0x0033:
-            memory.setAddress(I, V.at(X) / 100);
-            memory.setAddress(I + 1, (V.at(X) / 10) % 10);
-            memory.setAddress(I + 1, (V.at(X) % 100) % 10);
+            memory.setAddress(I, (V.at(X) % 1000) / 100);
+            memory.setAddress(I + 1, (V.at(X) % 100) / 10);
+            memory.setAddress(I + 2, V.at(X) % 10);
             PC += 2;
             break;
         case 0x0055:
@@ -190,11 +196,17 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
             PC += 2;
             break;
         default:
+            std::cerr << "Unknown opcode: " << std::hex << opcode << std::endl;
             break;
         }
         break;
     default:
+        std::cerr << "Unknown opcode: " << std::hex << opcode << std::endl;
         break;
+    }
+
+    if (display.getDrawFlag()) {
+        display.draw();
     }
 
     if (soundTimer > 0) {
@@ -204,4 +216,6 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
     if (delayTimer > 0) {
         --delayTimer;
     }
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
 }

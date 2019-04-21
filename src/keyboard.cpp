@@ -131,5 +131,3 @@ void Keyboard::poll(bool &quitPressed) {
         }
     }
 }
-
-
