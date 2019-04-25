@@ -11,6 +11,6 @@ addons:
       - libsdl2-dev
 
 script:
-  - cmake && make
+  - cmake . && make
 
 
