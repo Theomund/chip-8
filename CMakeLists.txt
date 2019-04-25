@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.12)
 project(chip-8)
 set(SOURCES include/cpu.h
             include/emulator.h
