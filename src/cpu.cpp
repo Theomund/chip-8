@@ -5,8 +5,8 @@ CPU::CPU()
       delayTimer(0), soundTimer(0) {}
 
 void CPU::fetch(Memory &memory) {
-    opcode = static_cast<std::uint16_t>(memory.getAddress(PC) << 8 |
-                                        memory.getAddress(PC + 1));
+    opcode = static_cast<unsigned short>(memory.getAddress(PC) << 8 |
+                                         memory.getAddress(PC + 1));
 }
 
 void CPU::decode() {
@@ -29,8 +29,7 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
             PC = memory.pop();
             break;
         default:
-            std::cerr << "Unknown opcode: " << std::hex << opcode << std::endl;
-            break;
+            throw std::runtime_error("Unknown opcode");
         }
         break;
     case 0x1000:
@@ -101,8 +100,7 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
             PC += 2;
             break;
         default:
-            std::cerr << "Unknown opcode: " << std::hex << opcode << std::endl;
-            break;
+            throw std::runtime_error("Unknown opcode");
         }
         break;
     case 0x9000:
@@ -121,11 +119,11 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
         break;
     case 0xD000:
         V.at(0xF) = 0;
-        for (std::uint32_t byteIndex = 0; byteIndex < N; byteIndex++) {
-            std::uint8_t byte = memory.getAddress(I + byteIndex);
-            for (std::uint32_t bitIndex = 0; bitIndex < 8; bitIndex++) {
-                std::uint8_t bit = (byte >> bitIndex) & 0x1;
-                std::uint8_t pixel =
+        for (unsigned int byteIndex = 0; byteIndex < N; byteIndex++) {
+            unsigned char byte = memory.getAddress(I + byteIndex);
+            for (unsigned int bitIndex = 0; bitIndex < 8; bitIndex++) {
+                unsigned char bit = (byte >> bitIndex) & 0x1;
+                unsigned char pixel =
                     display.getPixel((V.at(X) + (7 - bitIndex)) % 64,
                                      (V.at(Y) + byteIndex) % 32);
                 if (bit == 1 && pixel == 1) {
@@ -147,8 +145,7 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
             PC += (keyboard.getKey(V.at(X)) == 0) ? 4 : 2;
             break;
         default:
-            std::cerr << "Unknown opcode: " << std::hex << opcode << std::endl;
-            break;
+            throw std::runtime_error("Unknown opcode");
         }
         break;
     case 0xF000:
@@ -184,25 +181,23 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
             PC += 2;
             break;
         case 0x0055:
-            for (std::uint32_t i = 0; i <= X; i++) {
+            for (unsigned int i = 0; i <= X; i++) {
                 memory.setAddress(I + i, V.at(i));
             }
             PC += 2;
             break;
         case 0x0065:
-            for (std::uint32_t i = 0; i <= X; i++) {
+            for (unsigned int i = 0; i <= X; i++) {
                 V.at(i) = memory.getAddress(I + i);
             }
             PC += 2;
             break;
         default:
-            std::cerr << "Unknown opcode: " << std::hex << opcode << std::endl;
-            break;
+            throw std::runtime_error("Unknown opcode");
         }
         break;
     default:
-        std::cerr << "Unknown opcode: " << std::hex << opcode << std::endl;
-        break;
+        throw std::runtime_error("Unknown opcode");
     }
 
     if (display.getDrawFlag()) {
@@ -211,6 +206,9 @@ void CPU::execute(Display &display, Keyboard &keyboard, Memory &memory) {
 
     if (soundTimer > 0) {
         --soundTimer;
+        if (soundTimer == 0) {
+            std::cout << "Beep!" << std::endl;
+        }
     }
 
     if (delayTimer > 0) {

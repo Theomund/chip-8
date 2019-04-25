@@ -9,12 +9,12 @@
 class Keyboard {
   public:
     Keyboard();
-    std::uint8_t getKey(std::uint32_t index) const;
-    std::uint8_t waitForInput();
+    unsigned char getKey(unsigned int index) const;
+    unsigned char waitForInput();
     void poll(bool &quitPressed);
 
   private:
-    std::array<std::uint8_t, 16> keys;
+    std::array<unsigned char, 16> keys;
     bool quit;
 };
 

@@ -23,11 +23,11 @@ void Display::clear() {
 
 bool Display::getDrawFlag() const { return drawFlag; }
 
-std::uint8_t Display::getPixel(std::uint32_t x, std::uint32_t y) const {
+unsigned char Display::getPixel(int x, int y) const {
     return pixels.at(y).at(x);
 }
 
-void Display::setPixel(std::uint32_t x, std::uint32_t y, std::uint8_t value) {
+void Display::setPixel(unsigned int x, unsigned int y, unsigned char value) {
     pixels.at(y).at(x) = value;
 }
 
@@ -43,10 +43,10 @@ void Display::draw() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    for (std::uint32_t y = 0; y < 32; y++) {
-        for (std::uint32_t x = 0; x < 64; x++) {
-            rect.x = static_cast<int>(x) * rect.w;
-            rect.y = static_cast<int>(y) * rect.h;
+    for (int y = 0; y < 32; y++) {
+        for (int x = 0; x < 64; x++) {
+            rect.x = x * rect.w;
+            rect.y = y * rect.h;
             if (pixels.at(y).at(x) == 1) {
                 SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
             } else {

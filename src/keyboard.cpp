@@ -2,11 +2,11 @@
 
 Keyboard::Keyboard() : keys{}, quit(false) {}
 
-std::uint8_t Keyboard::getKey(std::uint32_t index) const {
+unsigned char Keyboard::getKey(unsigned int index) const {
     return keys.at(index);
 }
 
-std::uint8_t Keyboard::waitForInput() {
+unsigned char Keyboard::waitForInput() {
     while (true) {
         for (auto key : keys) {
             if (key != 0) {

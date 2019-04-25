@@ -11,16 +11,16 @@
 class Memory {
   public:
     Memory();
-    std::uint8_t getAddress(const std::uint32_t index) const;
-    void setAddress(const std::uint32_t index, const std::uint8_t value);
+    unsigned char getAddress(const unsigned int index) const;
+    void setAddress(const unsigned int index, const unsigned char value);
     void loadFont(const Font &font);
     void loadROM(const std::string &name);
-    void push(std::uint16_t address);
-    std::uint16_t pop();
+    void push(unsigned short address);
+    unsigned short pop();
 
   private:
-    std::array<std::uint8_t, 4096> addresses;
-    std::stack<std::uint16_t> stack;
+    std::array<unsigned char, 4096> addresses;
+    std::stack<unsigned short> stack;
 };
 
 #endif

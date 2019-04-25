@@ -3,11 +3,11 @@
 
 Memory::Memory() : addresses{} {}
 
-std::uint8_t Memory::getAddress(const std::uint32_t index) const {
-    return static_cast<std::uint8_t>(addresses.at(index));
+unsigned char Memory::getAddress(const unsigned int index) const {
+    return static_cast<unsigned char>(addresses.at(index));
 }
 
-void Memory::setAddress(const std::uint32_t index, const std::uint8_t value) {
+void Memory::setAddress(const unsigned int index, const unsigned char value) {
     addresses.at(index) = value;
 }
 
@@ -17,20 +17,20 @@ void Memory::loadROM(const std::string &name) {
         std::copy(std::istreambuf_iterator<char>(stream),
                   std::istreambuf_iterator<char>(), addresses.begin() + 0x200);
     } else {
-        std::cerr << "Failed to read file" << std::endl;
+        throw std::runtime_error("Failed to read file");
     }
 }
 
-void Memory::push(std::uint16_t address) { stack.push(address); }
+void Memory::push(unsigned short address) { stack.push(address); }
 
-std::uint16_t Memory::pop() {
+unsigned short Memory::pop() {
     auto address = stack.top();
     stack.pop();
     return address;
 }
 
 void Memory::loadFont(const Font &font) {
-    for (std::size_t i = 0; i < font.getSize(); i++) {
+    for (size_t i = 0; i < font.getSize(); i++) {
         auto character = font.getCharacter(i);
         std::copy(character.begin(), character.end(),
                   addresses.begin() + (i * font.getHeight()));
