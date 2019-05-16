@@ -11,12 +11,34 @@
 #include <stdexcept>
 #include <thread>
 
+/**
+ * @brief A class for performing the instructions of a computer program.
+ */
 class CPU
 {
 public:
+    /**
+     * @brief Initializes all variables to their default values.
+     */
     CPU();
+
+    /**
+     * @brief Fetches an operation code from memory.
+     * @param memory The memory class to be read from.
+     */
     void fetch(Memory &memory);
+
+    /**
+     * @brief Decodes the operation code and assigns nibbles.
+     */
     void decode();
+
+    /**
+     * @brief Selects an instruction to execute based on the operation code.
+     * @param display The display class to read/write from.
+     * @param keyboard The keyboard class to read/write from.
+     * @param memory The memory class to read/write from.
+     */
     void execute(Display &display, Keyboard &keyboard, Memory &memory);
 
 private:
