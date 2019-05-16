@@ -4,22 +4,22 @@
 #include "display.h"
 #include "keyboard.h"
 #include "memory.h"
-
 #include <array>
 #include <chrono>
 #include <cstdint>
 #include <iostream>
-#include <thread>
 #include <stdexcept>
+#include <thread>
 
-class CPU {
-  public:
+class CPU
+{
+public:
     CPU();
     void fetch(Memory &memory);
     void decode();
     void execute(Display &display, Keyboard &keyboard, Memory &memory);
 
-  private:
+private:
     std::array<unsigned char, 16> V;
     unsigned short opcode;
     unsigned short PC;

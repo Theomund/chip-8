@@ -15,7 +15,7 @@ set(SOURCES include/cpu.h
             src/font.cpp
             src/display.cpp
             src/sound.cpp)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "./cmake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 find_package(SDL2 REQUIRED)
 include_directories(include ${SDL2_INCLUDE_DIR})
 add_executable(${PROJECT_NAME} ${SOURCES})

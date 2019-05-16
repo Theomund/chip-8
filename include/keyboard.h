@@ -2,18 +2,18 @@
 #define KEYBOARD_H
 
 #include "SDL2/SDL.h"
-
 #include <array>
 #include <cstdint>
 
-class Keyboard {
-  public:
+class Keyboard
+{
+public:
     Keyboard();
     unsigned char getKey(unsigned int index) const;
     unsigned char waitForInput();
     void poll(bool &quitPressed);
 
-  private:
+private:
     std::array<unsigned char, 16> keys;
     bool quit;
 };

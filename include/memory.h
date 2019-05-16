@@ -2,14 +2,14 @@
 #define MEMORY_H
 
 #include "font.h"
-
 #include <array>
 #include <cstdint>
 #include <fstream>
 #include <stack>
 
-class Memory {
-  public:
+class Memory
+{
+public:
     Memory();
     unsigned char getAddress(const unsigned int index) const;
     void setAddress(const unsigned int index, const unsigned char value);
@@ -18,7 +18,7 @@ class Memory {
     void push(unsigned short address);
     unsigned short pop();
 
-  private:
+private:
     std::array<unsigned char, 4096> addresses;
     std::stack<unsigned short> stack;
 };

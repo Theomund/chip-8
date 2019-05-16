@@ -2,13 +2,13 @@
 #define DISPLAY_H
 
 #include "SDL2/SDL.h"
-
 #include <array>
 #include <cstdint>
 #include <memory>
 
-class Display {
-  public:
+class Display
+{
+public:
     Display();
     ~Display();
     void clear();
@@ -18,7 +18,7 @@ class Display {
     bool getDrawFlag() const;
     void draw();
 
-  private:
+private:
     std::array<std::array<unsigned char, 64>, 32> pixels;
     bool drawFlag;
     SDL_Window *window;

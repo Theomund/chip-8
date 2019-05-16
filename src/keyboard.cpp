@@ -2,30 +2,39 @@
 
 Keyboard::Keyboard() : keys{}, quit(false) {}
 
-unsigned char Keyboard::getKey(unsigned int index) const {
+unsigned char Keyboard::getKey(unsigned int index) const
+{
     return keys.at(index);
 }
 
-unsigned char Keyboard::waitForInput() {
-    while (true) {
-        for (auto key : keys) {
-            if (key != 0) {
+unsigned char Keyboard::waitForInput()
+{
+    while (true)
+    {
+        for (auto key : keys)
+        {
+            if (key != 0)
+            {
                 return key;
             }
         }
     }
 }
 
-void Keyboard::poll(bool &quitPressed) {
+void Keyboard::poll(bool &quitPressed)
+{
     SDL_Event event;
 
-    while (SDL_PollEvent(&event)) {
-        switch (event.type) {
+    while (SDL_PollEvent(&event))
+    {
+        switch (event.type)
+        {
         case SDL_QUIT:
             quitPressed = true;
             break;
         case SDL_KEYDOWN:
-            switch (event.key.keysym.sym) {
+            switch (event.key.keysym.sym)
+            {
             case SDLK_1:
                 keys.at(0x1) = 1;
                 break;
@@ -77,7 +86,8 @@ void Keyboard::poll(bool &quitPressed) {
             }
             break;
         case SDL_KEYUP:
-            switch (event.key.keysym.sym) {
+            switch (event.key.keysym.sym)
+            {
             case SDLK_1:
                 keys.at(0x1) = 0;
                 break;

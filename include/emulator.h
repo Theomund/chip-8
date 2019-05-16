@@ -6,16 +6,16 @@
 #include "font.h"
 #include "keyboard.h"
 #include "memory.h"
-
 #include <string>
 
-class Emulator {
-  public:
+class Emulator
+{
+public:
     Emulator(const std::string &fileName);
     void runCycle();
     bool getQuitPressed();
 
-  private:
+private:
     CPU cpu;
     Memory memory;
     Keyboard keyboard;

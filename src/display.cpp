@@ -1,6 +1,7 @@
 #include "display.h"
 
-Display::Display() : pixels{}, drawFlag(false) {
+Display::Display() : pixels{}, drawFlag(false)
+{
     SDL_Init(SDL_INIT_VIDEO);
     window =
         SDL_CreateWindow("CHIP-8", SDL_WINDOWPOS_CENTERED,
@@ -8,14 +9,17 @@ Display::Display() : pixels{}, drawFlag(false) {
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 }
 
-Display::~Display() {
+Display::~Display()
+{
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
 
-void Display::clear() {
-    for (auto row : pixels) {
+void Display::clear()
+{
+    for (auto row : pixels)
+    {
         row.fill(0);
     }
     drawFlag = true;
@@ -23,17 +27,20 @@ void Display::clear() {
 
 bool Display::getDrawFlag() const { return drawFlag; }
 
-unsigned char Display::getPixel(int x, int y) const {
-    return pixels.at(y).at(x);
+unsigned char Display::getPixel(int x, int y) const
+{
+    return pixels.at(static_cast<size_t>(y)).at(static_cast<size_t>(x));
 }
 
-void Display::setPixel(unsigned int x, unsigned int y, unsigned char value) {
+void Display::setPixel(unsigned int x, unsigned int y, unsigned char value)
+{
     pixels.at(y).at(x) = value;
 }
 
 void Display::setDrawFlag(bool value) { drawFlag = value; }
 
-void Display::draw() {
+void Display::draw()
+{
     SDL_Rect rect;
     rect.x = 0;
     rect.y = 0;
@@ -43,13 +50,18 @@ void Display::draw() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    for (int y = 0; y < 32; y++) {
-        for (int x = 0; x < 64; x++) {
+    for (int y = 0; y < 32; y++)
+    {
+        for (int x = 0; x < 64; x++)
+        {
             rect.x = x * rect.w;
             rect.y = y * rect.h;
-            if (pixels.at(y).at(x) == 1) {
+            if (getPixel(x, y) == 1)
+            {
                 SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-            } else {
+            }
+            else
+            {
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             }
             SDL_RenderFillRect(renderer, &rect);
@@ -57,7 +69,7 @@ void Display::draw() {
         }
     }
 
-    drawFlag = false;
+    setDrawFlag(false);
 
     SDL_RenderPresent(renderer);
 }
